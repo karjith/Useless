@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Impossible Maze</title>
+<style>
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        font-family: 'Segoe UI', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+    h1 {
+        color: #00fff0;
+        text-shadow: 0 0 8px #00fff0;
+    }
+    #maze {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        background: rgba(255,255,255,0.05);
+        border: 3px solid #00fff0;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+    .wall {
+        position: absolute;
+        background: #ff00ff;
+        transition: all 0.5s ease;
+        box-shadow: 0 0 10px #ff00ff;
+    }
+    .start, .end {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        font-weight: bold;
+        border-radius: 5px;
+    }
+    .start {
+        background: #00ff88;
+        top: 0;
+        left: 0;
+    }
+    .end {
+        background: #ff4444;
+        bottom: 0;
+        right: 0;
+    }
+    #player {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #00fff0;
+        border-radius: 50%;
+        top: 15px;
+        left: 15px;
+        transition: top 0.05s, left 0.05s;
+    }
+</style>
+</head>
+<body>
+
+<h1>Impossible Maze 😈</h1>
+<p>Use arrow keys to reach the red exit. Touch a wall and you're back to start!</p>
+
+<div id="maze">
+    <div class="start">START</div>
+    <div class="end">EXIT</div>
+    <div id="player"></div>
+</div>
+
+<script>
+const player = document.getElementById('player');
+const maze = document.getElementById('maze');
+let playerX = 15, playerY = 15;
+const speed = 5;
+
+let walls = [];
+
+function createWalls() {
+    walls.forEach(w => w.remove());
+    walls = [];
+    for (let i = 0; i < 6; i++) {
+        const wall = document.createElement('div');
+        wall.classList.add('wall');
+        if (Math.random() > 0.5) {
+            wall.style.width = Math.floor(Math.random() * 200 + 50) + 'px';
+            wall.style.height = '15px';
+            wall.style.top = Math.floor(Math.random() * 470) + 'px';
+            wall.style.left = Math.floor(Math.random() * 470) + 'px';
+        } else {
+            wall.style.height = Math.floor(Math.random() * 200 + 50) + 'px';
+            wall.style.width = '15px';
+            wall.style.top = Math.floor(Math.random() * 470) + 'px';
+            wall.style.left = Math.floor(Math.random() * 470) + 'px';
+        }
+        maze.appendChild(wall);
+        walls.push(wall);
+    }
+}
+
+function resetPlayer() {
+    playerX = 15;
+    playerY = 15;
+    player.style.left = playerX + 'px';
+    player.style.top = playerY + 'px';
+}
+
+function checkCollision() {
+    const playerRect = player.getBoundingClientRect();
+    const endRect = document.querySelector('.end').getBoundingClientRect();
+    // Win condition
+    if (!(playerRect.right < endRect.left ||
+          playerRect.left > endRect.right ||
+          playerRect.bottom < endRect.top ||
+          playerRect.top > endRect.bottom)) {
+        alert('🎉 You somehow escaped the Impossible Maze!');
+        resetPlayer();
+    }
+    // Wall collision
+    for (let wall of walls) {
+        const wallRect = wall.getBoundingClientRect();
+        if (!(playerRect.right < wallRect.left ||
+              playerRect.left > wallRect.right ||
+              playerRect.bottom < wallRect.top ||
+              playerRect.top > wallRect.bottom)) {
+            resetPlayer();
+        }
+    }
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowUp') playerY -= speed;
+    if (e.key === 'ArrowDown') playerY += speed;
+    if (e.key === 'ArrowLeft') playerX -= speed;
+    if (e.key === 'ArrowRight') playerX += speed;
+    playerX = Math.max(0, Math.min(maze.clientWidth - 20, playerX));
+    playerY = Math.max(0, Math.min(maze.clientHeight - 20, playerY));
+    player.style.left = playerX + 'px';
+    player.style.top = playerY + 'px';
+    checkCollision();
+});
+
+// Move walls every 2 seconds
+createWalls();
+setInterval(createWalls, 2000);
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
