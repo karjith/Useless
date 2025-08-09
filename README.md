@@ -1,14 +1,13 @@
-# Useless
+
 
 
 # [USELESS MAZE PROJECT] 
 
 
 ## Basic Details
-### Indiviual team: [name]
+### Indiviual : 
 
 
-### Team Members
 - Team Lead: [karjith mj ] [college of engineering trikaripur]
 
 
